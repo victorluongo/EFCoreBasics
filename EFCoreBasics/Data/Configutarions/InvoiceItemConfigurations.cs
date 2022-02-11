@@ -20,8 +20,6 @@ namespace EFCoreBasics.Data.Configutarions
             builder.Property(p => p.UnitPrice).IsRequired();
             builder.Property(p => p.Rate).IsRequired();
             builder.Property(p => p.Amount).IsRequired();
-
-            builder.HasIndex(i => i.Item).HasDatabaseName("idx_invoice_item");
         }
     }
 }
