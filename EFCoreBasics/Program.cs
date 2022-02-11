@@ -13,15 +13,17 @@ namespace EFCoreBasics
         static void Main(string[] args)
         {
             var _context = new ApplicationContext();
-
-            Console.WriteLine("Choose and option:\n");
+            
+            Console.WriteLine("\n- - - - - - - - - - - - -");
+            Console.WriteLine("Choose and option:");
+            Console.WriteLine("- - - - - - - - - - - - -");
             Console.WriteLine("[1] Customer");
             Console.WriteLine("[2] Item");
             Console.WriteLine("[3] Invoice");
             Console.WriteLine("[6] Add Multiple Records");
             Console.WriteLine("[7] Delete All Records");
             Console.WriteLine("[9] Exit");
-            Console.WriteLine("- - - - - - - - - - - - -");
+            Console.WriteLine("- - - - - - - - - - - - -\n");
 
             var key = Console.ReadKey();
             switch (key.KeyChar)
@@ -32,7 +34,7 @@ namespace EFCoreBasics
                     Console.WriteLine("[2] Read");
                     Console.WriteLine("[3] Update");
                     Console.WriteLine("[4] Delete");
-                    Console.WriteLine("- - - - - - - - - - - - -");
+                    Console.WriteLine("- - - - - - - - - - - - -\n");
                     var subkey1 = Console.ReadKey();
                     switch (subkey1.KeyChar)
                     {
@@ -49,7 +51,7 @@ namespace EFCoreBasics
                     Console.WriteLine("[2] Read");
                     Console.WriteLine("[3] Update");
                     Console.WriteLine("[4] Delete");
-                    Console.WriteLine("- - - - - - - - - - - - -");
+                    Console.WriteLine("- - - - - - - - - - - - -\n");
                     var subkey2 = Console.ReadKey();
                     switch (subkey2.KeyChar)
                     {
@@ -66,7 +68,7 @@ namespace EFCoreBasics
                     Console.WriteLine("[2] Read");
                     Console.WriteLine("[3] Update");
                     Console.WriteLine("[4] Delete");
-                    Console.WriteLine("- - - - - - - - - - - - -");
+                    Console.WriteLine("- - - - - - - - - - - - -\n");
                     var subkey3 = Console.ReadKey();
                     switch (subkey3.KeyChar)
                     {
@@ -105,7 +107,8 @@ namespace EFCoreBasics
             _context.Set<Customer>().Add(customer);            
             var records = _context.SaveChanges();
 
-            Console.WriteLine($"\nTotal record(s): {records}\n");
+            Console.WriteLine(" - Add Customer \n- - - - - - - - - - - - -");
+            Console.WriteLine($"Customer {customer.Name} added.");
         }
 
         private static void ReadCustomer(ApplicationContext _context){
@@ -115,34 +118,31 @@ namespace EFCoreBasics
                                 .OrderBy(p => p.Id)
                                 .ToList();
 
-            Console.WriteLine("- - - - - - - - - - - - -");
-            Console.WriteLine("\nLoading Items");
-            Console.WriteLine("- - - - - - - - - - - - -");
+            Console.WriteLine(" - Read Customer \n- - - - - - - - - - - - -");
+            Console.WriteLine("Loading customers...\n");
 
             foreach(var c in customer){
-                Console.WriteLine($"{c.Id} | {c.Name} | ({c.Email}) | {c.Phone}\n");
+                Console.WriteLine($"{c.Id} | {c.Name} | ({c.Email}) | {c.Phone}");
             }
 
             Console.WriteLine("- - - - - - - - - - - - -");
-            Console.WriteLine($"{customer.Count} Customer(s) found.\n");
+            Console.WriteLine($"{customer.Count} customer(s) found.");
         }
 
         private static void UpdateCustomer(ApplicationContext _context){
 
             var customer = _context.Customers.FirstOrDefault();
-            
+
             if(customer!=null){
                                 
                 customer.Name += $" updated at {DateTime.Now}";
-                
                 var records = _context.SaveChanges();
 
-                Console.WriteLine("\n- - - - - - - - - - - - -");
-                Console.WriteLine($"Customer {customer.Name} updated.\n");
-
+                Console.WriteLine(" - Update Customer \n- - - - - - - - - - - - -");
+                Console.WriteLine($"Customer {customer.Name} updated.");
             } else {
-                Console.WriteLine("\n- - - - - - - - - - - - -");
-                Console.WriteLine("No records found.\n");
+                Console.WriteLine(" - Update Customer \n- - - - - - - - - - - - -");
+                Console.WriteLine("No records found.");
             }
         }  
 
@@ -151,16 +151,15 @@ namespace EFCoreBasics
             var customer = _context.Customers.FirstOrDefault();
             
             if(customer!=null){
-                
-                Console.WriteLine("\n- - - - - - - - - - - - -");
-                Console.WriteLine($"Customer {customer.Name} deleted.\n");
-                
+                                
                 _context.Set<Customer>().Remove(customer);
                 var records = _context.SaveChanges();
 
+                Console.WriteLine(" - Delete Customer \n- - - - - - - - - - - - -");
+                Console.WriteLine($"Customer {customer.Name} deleted.");
             } else {
-                Console.WriteLine("\n- - - - - - - - - - - - -");
-                Console.WriteLine("No records found.\n");
+                Console.WriteLine(" - Delete Customer \n- - - - - - - - - - - - -");
+                Console.WriteLine("No records found.");
             }
         }                 
 
@@ -176,7 +175,8 @@ namespace EFCoreBasics
             _context.Set<Item>().Add(item);
             var records = _context.SaveChanges();
 
-            Console.WriteLine($"\nTotal record(s): {records}\n");
+            Console.WriteLine(" - Add Item \n- - - - - - - - - - - - -");
+            Console.WriteLine($"Item {item.Description} added.");
         }
 
         private static void ReadItem(ApplicationContext _context){
@@ -186,16 +186,15 @@ namespace EFCoreBasics
                                 .OrderBy(p => p.Id)
                                 .ToList();
 
-            Console.WriteLine("- - - - - - - - - - - - -");
-            Console.WriteLine("\nLoading Items");
-            Console.WriteLine("- - - - - - - - - - - - -");
+            Console.WriteLine(" - Read Items \n- - - - - - - - - - - - -");
+            Console.WriteLine("Loading items...\n");
 
             foreach(var i in item){
-                Console.WriteLine($"{i.Id} | {i.Description} | ({i.Type}) | ${i.SalesPrice}\n");
+                Console.WriteLine($"{i.Id} | {i.Description} | ({i.Type}) | ${i.SalesPrice}");
             }
 
             Console.WriteLine("- - - - - - - - - - - - -");
-            Console.WriteLine($"{item.Count} Item(s) found.\n");
+            Console.WriteLine($"{item.Count} item(s) found.");
         }  
 
         private static void UpdateItem(ApplicationContext _context){
@@ -205,15 +204,13 @@ namespace EFCoreBasics
             if(item!=null){
                                 
                 item.Description += $" updated at {DateTime.Now}";
-                
                 var records = _context.SaveChanges();
 
-                Console.WriteLine("\n- - - - - - - - - - - - -");
-                Console.WriteLine($"Item {item.Description} updated.\n");
-
+                Console.WriteLine(" - Update Item \n- - - - - - - - - - - - -");
+                Console.WriteLine($"Item {item.Description} updated.");
             } else {
-                Console.WriteLine("\n- - - - - - - - - - - - -");
-                Console.WriteLine("No records found.\n");
+                Console.WriteLine(" - Update Item \n- - - - - - - - - - - - -");
+                Console.WriteLine("No records found.");
             }
         }
 
@@ -223,15 +220,14 @@ namespace EFCoreBasics
             
             if(item!=null){
                 
-                Console.WriteLine("\n- - - - - - - - - - - - -");
-                Console.WriteLine($"Item {item.Description} deleted.\n");
-                
                 _context.Set<Item>().Remove(item);
                 var records = _context.SaveChanges();
-
+                
+                Console.WriteLine(" - Delete Item \n- - - - - - - - - - - - -");
+                Console.WriteLine($"Item {item.Description} deleted.");
             } else {
-                Console.WriteLine("\n- - - - - - - - - - - - -");
-                Console.WriteLine("No records found.\n");
+                Console.WriteLine(" - Delete Item \n- - - - - - - - - - - - -");
+                Console.WriteLine("No records found.");
             }
         }  
 
@@ -265,7 +261,8 @@ namespace EFCoreBasics
             _context.Set<Invoice>().Add(invoice);
             var records = _context.SaveChanges();
 
-            Console.WriteLine($"\nTotal record(s): {records}\n");
+            Console.WriteLine(" - Add Invoice \n- - - - - - - - - - - - -");
+            Console.WriteLine($"Invoice {invoice.Id} added.");
         }
 
         private static void ReadInvoice(ApplicationContext _context){
@@ -277,20 +274,21 @@ namespace EFCoreBasics
                                 .OrderBy(i => i.Id)
                                 .ToList();
 
-            Console.WriteLine("- - - - - - - - - - - - -");
-            Console.WriteLine("\nLoading Items");
-            Console.WriteLine("- - - - - - - - - - - - -");
+            Console.WriteLine(" - Read Invoice \n- - - - - - - - - - - - -");
+            Console.WriteLine("Loading invoices...\n");
 
             foreach(var i in invoice){
-                Console.WriteLine($"{i.Id} | ({i.Date}) | {i.Customer.Name} | ${i.Amount}\n");
-                Console.WriteLine("Invoice Items:\n");
+                Console.WriteLine($"{i.Id} | ({i.Date}) | {i.Customer.Name} | ${i.Amount}");
+                Console.WriteLine("Invoice Items");
                 
                 foreach(var l in i.Items){
-                    Console.WriteLine($"    {l.Id} | ({l.Item.Description}) | ${l.UnitPrice} | {l.Quantity} | {l.Amount} \n");
+                    Console.WriteLine($"    {l.Id} | ({l.Item.Description}) | ${l.UnitPrice} | {l.Quantity} | {l.Amount} ");
                 }
-                Console.WriteLine("- - - - - - - - - - - - -");
+                Console.WriteLine("\n");
             }
-            Console.WriteLine($"{invoice.Count} Item(s) found.\n");
+
+            Console.WriteLine("- - - - - - - - - - - - -");
+            Console.WriteLine($"{invoice.Count} invoice(s) found.");
         }
 
         private static void UpdateInvoice(ApplicationContext _context){
@@ -313,15 +311,13 @@ namespace EFCoreBasics
                 };
 
                 invoice.Amount += 1 * item.SalesPrice;
-
                 var records = _context.SaveChanges();
 
-                Console.WriteLine("\n- - - - - - - - - - - - -");
-                Console.WriteLine($"Item {item.Description} added in invoice.\n");
-
+                Console.WriteLine(" - Update Invoice \n- - - - - - - - - - - - -");
+                Console.WriteLine($"Invoice {invoice.Id} updated.");
             } else {
-                Console.WriteLine("\n- - - - - - - - - - - - -");
-                Console.WriteLine("No records found.\n");
+                Console.WriteLine(" - Update Invoice \n- - - - - - - - - - - - -");
+                Console.WriteLine("No records found.");
             }
         }           
 
@@ -331,23 +327,21 @@ namespace EFCoreBasics
             
             if(invoice!=null){
                 
-                Console.WriteLine("\n- - - - - - - - - - - - -");
-                Console.WriteLine($"Invoice {invoice.Id} deleted.\n");
-                
                 _context.Set<Invoice>().Remove(invoice);
                 var records = _context.SaveChanges();
 
+                Console.WriteLine(" - Delete Invoice \n- - - - - - - - - - - - -");
+                Console.WriteLine($"Invoice {invoice.Id} deleted.");
             } else {
-                Console.WriteLine("\n- - - - - - - - - - - - -");
-                Console.WriteLine("No records found.\n");
+                Console.WriteLine(" - Delete Invoice \n- - - - - - - - - - - - -");
+                Console.WriteLine("No records found.");
             }
         }          
 
         private static void AddMultipleRecords(ApplicationContext _context)
         {
 
-            Console.WriteLine("\n- - - - - - - - - - - - -");
-            Console.WriteLine("Adding multiple records...");
+            Console.WriteLine(" - Adding multiple records...");
             Console.WriteLine("- - - - - - - - - - - - -");
 
             var customer = new Customer {
@@ -380,37 +374,34 @@ namespace EFCoreBasics
                 },
             };
 
-            _context.Set<Item>().AddRange(itemList);            
+            _context.Set<Item>().AddRange(itemList);
 
             var records = _context.SaveChanges();
 
-            Console.WriteLine("\n- - - - - - - - - - - - -");
-            Console.WriteLine("4 Records added...\n");
-
+            Console.WriteLine("4 Records added...");
         }
 
         private static void DeleteAllRecords(ApplicationContext _context){      
 
-            Console.WriteLine("\n- - - - - - - - - - - - -");
-            Console.WriteLine("Deleting all records...");
-            Console.WriteLine("- - - - - - - - - - - - -");
+            Console.WriteLine(" - Deleting all records...");
+            Console.WriteLine("- - - - - - - - - - - - -\n");
             
             var invoices = _context.Invoices.ToList();
-            Console.WriteLine($"{invoices.Count} Invoice(s) deleted\n");
+            Console.WriteLine($"{invoices.Count} Invoice(s) deleted.");
             foreach(var invoice in invoices){
                 _context.Invoices.Remove(invoice);
                 _context.SaveChanges();                
             }                                                          
 
             var items = _context.Items.ToList();
-            Console.WriteLine($"{items.Count} Item(s) deleted\n");
+            Console.WriteLine($"{items.Count} Item(s) deleted.");
             foreach(var item in items){
                 _context.Items.Remove(item);
                 _context.SaveChanges();                
             }  
 
             var customers = _context.Customers.ToList();
-            Console.WriteLine($"{customers.Count} Customer(s) deleted\n");
+            Console.WriteLine($"{customers.Count} Customer(s) deleted.");
             foreach(var customer in customers){
                 _context.Customers.Remove(customer);
                 _context.SaveChanges();                
