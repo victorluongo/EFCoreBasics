@@ -4,6 +4,7 @@ using System.Linq;
 using EFCoreBasics.Data;
 using EFCoreBasics.Domain;
 using EFCoreBasics.ValueObjects;
+using Microsoft.EntityFrameworkCore;
 
 namespace EFCoreBasics
 {
@@ -14,23 +15,52 @@ namespace EFCoreBasics
             var _context = new ApplicationContext();
 
             Console.WriteLine("Choose and option:\n");
-            Console.WriteLine("[1] Add Customer");
-            Console.WriteLine("[2] Add Item");
-            Console.WriteLine("[3] Add Invoice");
+            Console.WriteLine("[1] Customer");
+            Console.WriteLine("[2] Item");
+            Console.WriteLine("[3] Invoice");
             Console.WriteLine("- - - - - - - - - - - - -");
 
             var key = Console.ReadKey();
             switch (key.KeyChar)
             {
                 case '1':
-                    AddCustomer(_context);
-                    break;
+                    Console.WriteLine(" - Customer");
+                    Console.WriteLine("[1] Add");
+                    Console.WriteLine("[2] Read");
+                    Console.WriteLine("- - - - - - - - - - - - -");
+                    var subkey1 = Console.ReadKey();
+                    switch (subkey1.KeyChar)
+                    {
+                        case '1': AddCustomer(_context); break;
+                        case '2': ReadCustomer(_context); break;
+                    }
+                    break;  
+
                 case '2':
-                    AddItem(_context);
-                    break;
+                    Console.WriteLine(" - Item");
+                    Console.WriteLine("[1] Add");
+                    Console.WriteLine("[2] Read");
+                    Console.WriteLine("- - - - - - - - - - - - -");
+                    var subkey2 = Console.ReadKey();
+                    switch (subkey2.KeyChar)
+                    {
+                        case '1': AddItem(_context); break;
+                        case '2': ReadItem(_context); break;
+                    }
+                    break;     
+
                 case '3':
-                    AddInvoice(_context);
-                    break;                    
+                    Console.WriteLine(" - Item");
+                    Console.WriteLine("[1] Add");
+                    Console.WriteLine("[2] Read");
+                    Console.WriteLine("- - - - - - - - - - - - -");
+                    var subkey3 = Console.ReadKey();
+                    switch (subkey3.KeyChar)
+                    {
+                        case '1': AddInvoice(_context); break;
+                        case '2': ReadInvoice(_context); break;
+                    }
+                    break;     
             }
         }
 
@@ -49,6 +79,25 @@ namespace EFCoreBasics
             Console.WriteLine($"\nTotal record(s): {records}\n");
         }
 
+        private static void ReadCustomer(ApplicationContext _context){
+
+            var customer = _context.Customers
+                                .Where(p => p.Id > 0)
+                                .OrderBy(p => p.Id)
+                                .ToList();
+
+            Console.WriteLine("- - - - - - - - - - - - -");
+            Console.WriteLine("\nLoading Items");
+            Console.WriteLine("- - - - - - - - - - - - -");
+
+            foreach(var c in customer){
+                Console.WriteLine($"{c.Id} | {c.Name} | ({c.Email}) | {c.Phone}\n");
+            }
+
+            Console.WriteLine("- - - - - - - - - - - - -");
+            Console.WriteLine($"{customer.Count} Customer(s) found.\n");
+        }         
+
         private static void AddItem(ApplicationContext _context){
 
             var item = new Item
@@ -63,6 +112,25 @@ namespace EFCoreBasics
 
             Console.WriteLine($"\nTotal record(s): {records}\n");
         }
+
+        private static void ReadItem(ApplicationContext _context){
+
+            var item = _context.Items
+                                .Where(p => p.Id > 0)
+                                .OrderBy(p => p.Id)
+                                .ToList();
+
+            Console.WriteLine("- - - - - - - - - - - - -");
+            Console.WriteLine("\nLoading Items");
+            Console.WriteLine("- - - - - - - - - - - - -");
+
+            foreach(var i in item){
+                Console.WriteLine($"{i.Id} | {i.Description} | ({i.Type}) | ${i.SalesPrice}\n");
+            }
+
+            Console.WriteLine("- - - - - - - - - - - - -");
+            Console.WriteLine($"{item.Count} Item(s) found.\n");
+        }        
 
         private static void AddInvoice(ApplicationContext _context){
 
@@ -96,6 +164,31 @@ namespace EFCoreBasics
 
             Console.WriteLine($"\nTotal record(s): {records}\n");
         }
+
+        private static void ReadInvoice(ApplicationContext _context){
+
+            var invoice = _context.Invoices
+                                .Where(i => i.Id > 0)
+                                .Include(i => i.Customer)
+                                .Include(i => i.Items).ThenInclude(p => p.Item)
+                                .OrderBy(i => i.Id)
+                                .ToList();
+
+            Console.WriteLine("- - - - - - - - - - - - -");
+            Console.WriteLine("\nLoading Items");
+            Console.WriteLine("- - - - - - - - - - - - -");
+
+            foreach(var i in invoice){
+                Console.WriteLine($"{i.Id} | ({i.Date}) | {i.Customer.Name} | ${i.Amount}\n");
+                Console.WriteLine("Invoice Items:\n");
+                
+                foreach(var l in i.Items){
+                    Console.WriteLine($"    {l.Id} | ({l.Item.Description}) | ${l.UnitPrice} | {l.Quantity} | {l.Amount} \n");
+                }
+                Console.WriteLine("- - - - - - - - - - - - -");
+            }
+            Console.WriteLine($"{invoice.Count} Item(s) found.\n");
+        }          
 
     }
 }
