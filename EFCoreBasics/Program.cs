@@ -29,14 +29,16 @@ namespace EFCoreBasics
                     Console.WriteLine(" - Customer");
                     Console.WriteLine("[1] Add");
                     Console.WriteLine("[2] Read");
-                    Console.WriteLine("[3] Delete");
+                    Console.WriteLine("[3] Update");
+                    Console.WriteLine("[4] Delete");
                     Console.WriteLine("- - - - - - - - - - - - -");
                     var subkey1 = Console.ReadKey();
                     switch (subkey1.KeyChar)
                     {
                         case '1': AddCustomer(_context); break;
                         case '2': ReadCustomer(_context); break;
-                        case '3': DeleteCustomer(_context); break;
+                        case '3': UpdateCustomer(_context); break;
+                        case '4': DeleteCustomer(_context); break;
                     }
                     break;  
 
@@ -44,29 +46,33 @@ namespace EFCoreBasics
                     Console.WriteLine(" - Item");
                     Console.WriteLine("[1] Add");
                     Console.WriteLine("[2] Read");
-                    Console.WriteLine("[3] Delete");
+                    Console.WriteLine("[3] Update");
+                    Console.WriteLine("[4] Delete");
                     Console.WriteLine("- - - - - - - - - - - - -");
                     var subkey2 = Console.ReadKey();
                     switch (subkey2.KeyChar)
                     {
                         case '1': AddItem(_context); break;
                         case '2': ReadItem(_context); break;
-                        case '3': DeleteItem(_context); break;
+                        case '3': UpdateItem(_context); break;
+                        case '4': DeleteItem(_context); break;
                     }
                     break;     
 
                 case '3':
-                    Console.WriteLine(" - Item");
+                    Console.WriteLine(" - Invoice");
                     Console.WriteLine("[1] Add");
                     Console.WriteLine("[2] Read");
-                    Console.WriteLine("[3] Delete");
+                    Console.WriteLine("[3] Update");
+                    Console.WriteLine("[4] Delete");
                     Console.WriteLine("- - - - - - - - - - - - -");
                     var subkey3 = Console.ReadKey();
                     switch (subkey3.KeyChar)
                     {
                         case '1': AddInvoice(_context); break;
                         case '2': ReadInvoice(_context); break;
-                        case '3': DeleteInvoice(_context); break;
+                        case '3': UpdateInvoice(_context); break;
+                        case '4': DeleteInvoice(_context); break;
                     }
                     break; 
 
@@ -115,6 +121,25 @@ namespace EFCoreBasics
             Console.WriteLine("- - - - - - - - - - - - -");
             Console.WriteLine($"{customer.Count} Customer(s) found.\n");
         }
+
+        private static void UpdateCustomer(ApplicationContext _context){
+
+            var customer = _context.Customers.FirstOrDefault();
+            
+            if(customer!=null){
+                                
+                customer.Name += $" updated at {DateTime.Now}";
+                
+                var records = _context.SaveChanges();
+
+                Console.WriteLine("\n- - - - - - - - - - - - -");
+                Console.WriteLine($"Customer {customer.Name} updated.\n");
+
+            } else {
+                Console.WriteLine("\n- - - - - - - - - - - - -");
+                Console.WriteLine("No records found.\n");
+            }
+        }  
 
         private static void DeleteCustomer(ApplicationContext _context){
 
@@ -244,6 +269,25 @@ namespace EFCoreBasics
             Console.WriteLine($"{invoice.Count} Item(s) found.\n");
         }
 
+        private static void UpdateItem(ApplicationContext _context){
+
+            var item = _context.Items.FirstOrDefault();
+            
+            if(item!=null){
+                                
+                item.Description += $" updated at {DateTime.Now}";
+                
+                var records = _context.SaveChanges();
+
+                Console.WriteLine("\n- - - - - - - - - - - - -");
+                Console.WriteLine($"Item {item.Description} updated.\n");
+
+            } else {
+                Console.WriteLine("\n- - - - - - - - - - - - -");
+                Console.WriteLine("No records found.\n");
+            }
+        }         
+
         private static void DeleteInvoice(ApplicationContext _context){
 
             var invoice = _context.Invoices.FirstOrDefault();
@@ -290,6 +334,38 @@ namespace EFCoreBasics
             }  
 
         }
+
+        private static void UpdateInvoice(ApplicationContext _context){
+
+            var invoice = _context.Invoices.FirstOrDefault();
+            var item = _context.Items.FirstOrDefault();
+
+            if(invoice!=null && item!=null){
+
+                invoice.Items = new List<InvoiceItem>
+                {
+                    new InvoiceItem
+                    {
+                        ItemId = item.Id,
+                        Quantity = 1m,
+                        UnitPrice = item.SalesPrice,
+                        Rate = 0m,
+                        Amount = 1 * item.SalesPrice
+                    }
+                };
+
+                invoice.Amount += 1 * item.SalesPrice;
+
+                var records = _context.SaveChanges();
+
+                Console.WriteLine("\n- - - - - - - - - - - - -");
+                Console.WriteLine($"Item {item.Description} added in invoice.\n");
+
+            } else {
+                Console.WriteLine("\n- - - - - - - - - - - - -");
+                Console.WriteLine("No records found.\n");
+            }
+        }              
 
     }
 }
