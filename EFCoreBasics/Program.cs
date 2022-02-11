@@ -18,6 +18,7 @@ namespace EFCoreBasics
             Console.WriteLine("[1] Customer");
             Console.WriteLine("[2] Item");
             Console.WriteLine("[3] Invoice");
+            Console.WriteLine("[6] Add Multiple Records");
             Console.WriteLine("[7] Delete All Records");
             Console.WriteLine("[9] Exit");
             Console.WriteLine("- - - - - - - - - - - - -");
@@ -76,9 +77,13 @@ namespace EFCoreBasics
                     }
                     break; 
 
+                case '6':
+                    AddMultipleRecords(_context);
+                    break;
+
                 case '7':
                     DeleteAllRecords(_context);
-                    break;   
+                    break;
 
                 case '9':
                     Environment.Exit(-1);
@@ -191,7 +196,26 @@ namespace EFCoreBasics
 
             Console.WriteLine("- - - - - - - - - - - - -");
             Console.WriteLine($"{item.Count} Item(s) found.\n");
-        }        
+        }  
+
+        private static void UpdateItem(ApplicationContext _context){
+
+            var item = _context.Items.FirstOrDefault();
+            
+            if(item!=null){
+                                
+                item.Description += $" updated at {DateTime.Now}";
+                
+                var records = _context.SaveChanges();
+
+                Console.WriteLine("\n- - - - - - - - - - - - -");
+                Console.WriteLine($"Item {item.Description} updated.\n");
+
+            } else {
+                Console.WriteLine("\n- - - - - - - - - - - - -");
+                Console.WriteLine("No records found.\n");
+            }
+        }
 
         private static void DeleteItem(ApplicationContext _context){
 
@@ -269,72 +293,6 @@ namespace EFCoreBasics
             Console.WriteLine($"{invoice.Count} Item(s) found.\n");
         }
 
-        private static void UpdateItem(ApplicationContext _context){
-
-            var item = _context.Items.FirstOrDefault();
-            
-            if(item!=null){
-                                
-                item.Description += $" updated at {DateTime.Now}";
-                
-                var records = _context.SaveChanges();
-
-                Console.WriteLine("\n- - - - - - - - - - - - -");
-                Console.WriteLine($"Item {item.Description} updated.\n");
-
-            } else {
-                Console.WriteLine("\n- - - - - - - - - - - - -");
-                Console.WriteLine("No records found.\n");
-            }
-        }         
-
-        private static void DeleteInvoice(ApplicationContext _context){
-
-            var invoice = _context.Invoices.FirstOrDefault();
-            
-            if(invoice!=null){
-                
-                Console.WriteLine("\n- - - - - - - - - - - - -");
-                Console.WriteLine($"Invoice {invoice.Id} deleted.\n");
-                
-                _context.Set<Invoice>().Remove(invoice);
-                var records = _context.SaveChanges();
-
-            } else {
-                Console.WriteLine("\n- - - - - - - - - - - - -");
-                Console.WriteLine("No records found.\n");
-            }
-        }          
-
-        private static void DeleteAllRecords(ApplicationContext _context){      
-
-            Console.WriteLine("\n- - - - - - - - - - - - -");
-            Console.WriteLine("Deleting all records...");
-            Console.WriteLine("- - - - - - - - - - - - -");
-            
-            var invoices = _context.Invoices.ToList();
-            Console.WriteLine($"{invoices.Count} Invoice(s) deleted\n");
-            foreach(var invoice in invoices){
-                _context.Invoices.Remove(invoice);
-                _context.SaveChanges();                
-            }                                                          
-
-            var items = _context.Items.ToList();
-            Console.WriteLine($"{items.Count} Item(s) deleted\n");
-            foreach(var item in items){
-                _context.Items.Remove(item);
-                _context.SaveChanges();                
-            }  
-
-            var customers = _context.Customers.ToList();
-            Console.WriteLine($"{customers.Count} Customer(s) deleted\n");
-            foreach(var customer in customers){
-                _context.Customers.Remove(customer);
-                _context.SaveChanges();                
-            }  
-
-        }
-
         private static void UpdateInvoice(ApplicationContext _context){
 
             var invoice = _context.Invoices.FirstOrDefault();
@@ -365,7 +323,99 @@ namespace EFCoreBasics
                 Console.WriteLine("\n- - - - - - - - - - - - -");
                 Console.WriteLine("No records found.\n");
             }
-        }              
+        }           
 
+        private static void DeleteInvoice(ApplicationContext _context){
+
+            var invoice = _context.Invoices.FirstOrDefault();
+            
+            if(invoice!=null){
+                
+                Console.WriteLine("\n- - - - - - - - - - - - -");
+                Console.WriteLine($"Invoice {invoice.Id} deleted.\n");
+                
+                _context.Set<Invoice>().Remove(invoice);
+                var records = _context.SaveChanges();
+
+            } else {
+                Console.WriteLine("\n- - - - - - - - - - - - -");
+                Console.WriteLine("No records found.\n");
+            }
+        }          
+
+        private static void AddMultipleRecords(ApplicationContext _context)
+        {
+
+            Console.WriteLine("\n- - - - - - - - - - - - -");
+            Console.WriteLine("Adding multiple records...");
+            Console.WriteLine("- - - - - - - - - - - - -");
+
+            var customer = new Customer {
+                Name = "Apple Store Brazil",
+                Phone = "11 5180-5900",
+                Email = "support@apple.com.br"
+            };
+
+            var item = new Item {
+
+                Type = ItemType.Product,
+                Description = "Macbook Pro M1",
+                SalesPrice = 19799m
+            };
+            
+            _context.AddRange(customer, item);
+
+            var itemList = new[] {
+
+                new Item {
+                    Type = ItemType.Product,
+                    Description = "iPad 11 Pro Wifi 128Gb",
+                    SalesPrice = 10799m
+                },
+
+                new Item {
+                    Type = ItemType.Product,
+                    Description = "iPhone 13 Pro Max 128Gb",
+                    SalesPrice = 10499m
+                },
+            };
+
+            _context.Set<Item>().AddRange(itemList);            
+
+            var records = _context.SaveChanges();
+
+            Console.WriteLine("\n- - - - - - - - - - - - -");
+            Console.WriteLine("4 Records added...\n");
+
+        }
+
+        private static void DeleteAllRecords(ApplicationContext _context){      
+
+            Console.WriteLine("\n- - - - - - - - - - - - -");
+            Console.WriteLine("Deleting all records...");
+            Console.WriteLine("- - - - - - - - - - - - -");
+            
+            var invoices = _context.Invoices.ToList();
+            Console.WriteLine($"{invoices.Count} Invoice(s) deleted\n");
+            foreach(var invoice in invoices){
+                _context.Invoices.Remove(invoice);
+                _context.SaveChanges();                
+            }                                                          
+
+            var items = _context.Items.ToList();
+            Console.WriteLine($"{items.Count} Item(s) deleted\n");
+            foreach(var item in items){
+                _context.Items.Remove(item);
+                _context.SaveChanges();                
+            }  
+
+            var customers = _context.Customers.ToList();
+            Console.WriteLine($"{customers.Count} Customer(s) deleted\n");
+            foreach(var customer in customers){
+                _context.Customers.Remove(customer);
+                _context.SaveChanges();                
+            }  
+
+        }
     }
 }
